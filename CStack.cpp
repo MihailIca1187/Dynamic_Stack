@@ -17,6 +17,7 @@ CStack::CStack(int stackSize)
 
 CStack::CStack(CStack* oldStack) //Copy constructor
 {
+
 	mLength = 0;
 	size = oldStack->size; //Initialising size to the existing stack's size
 	mData = new string * [size]; //Pointing mData to array of pointers to string
@@ -27,10 +28,10 @@ CStack::CStack(CStack* oldStack) //Copy constructor
 		mData[i] = nullptr;
 	}
 
-	for (string** i = oldStack->mData; i < oldStack->mTop; i++) //Since we are pushing data from the other stack, we use i with oldStack's mData and mTop
-	{
-		Push(**i);
-	}
+	//for (string** i = oldStack->mData; i < oldStack->mTop; i++) //Since we are pushing data from the other stack, we use i with oldStack's mData and mTop
+	//{
+	//	Push(**i);
+	//}
 
 }
 
@@ -105,7 +106,7 @@ bool CStack::IsFull()
 	return(mTop >= (mData + size));
 }
 
-//Checking is stack is empty by checking if mTop is smaller than mData
+//Checking if stack is empty by checking if mTop is smaller than mData
 bool CStack::IsEmpty()
 {
 	return(mTop <= mData);
@@ -113,20 +114,41 @@ bool CStack::IsEmpty()
 
 void CStack::DisplayStack()
 {
+
 	cout << "\n";
-	for (string** i = mData; i < mTop; ++i)
+
+	//If the first element in mData is nullptr, that means the stack is empty and there's nothing to display
+	if (*mData == nullptr)
 	{
-		cout << **i << endl;
+		cout << "\nStack is empty!\n\n";
 	}
+	else
+	{
+		for (string** i = mData; i < mTop; ++i)
+		{
+			cout << **i << endl;
+		}
+	}
+
 }
 
 void CStack::DisplayStackInReverse()
 {
 	cout << "\n";
-	for (string** i = mTop - 1; i >= mData; i--)
+
+	//If the first element in mData is nullptr, that means the stack is empty and there's nothing to display
+	if (*mData == nullptr)
 	{
-		cout << **i << endl;
+		cout << "\nStack is empty!\n\n";
 	}
+	else
+	{
+		for (string** i = mTop - 1; i >= mData; i--)
+		{
+			cout << **i << endl;
+		}
+	}
+
 }
 
 int CStack::CountData(string searchString)
@@ -159,7 +181,7 @@ int CStack::FindData(string searchString)
 		}
 	}
 
-	
+
 }
 
 void CStack::displayN(int n)
@@ -182,7 +204,7 @@ void CStack::displayN(int n)
 
 			if (n == index)
 			{
-				cout << "The item at index " << n << " is "<< **i << "\n\n";
+				cout << "The item at index " << n << " is " << **i << "\n\n";
 			}
 		}
 	}
@@ -193,7 +215,7 @@ bool CStack::findN(int n, string& foundString)
 {
 	//First we get the length of the stack (elements in it)
 	int i;
-	GetLength(i); 
+	GetLength(i);
 
 	//If index given is out of bounds, return false
 	if (n < 0 || n > i)
@@ -229,14 +251,14 @@ bool CStack::allSame()
 	for (string** i = mData; i < mTop; i++)
 	{
 		string** j = mTop - 1;
-		
+
 		if (**i == **j)
 		{
 			counter++;
 		}
 
 		j--;
-		
+
 	}
 	if (counter == mLength)
 	{
@@ -246,13 +268,15 @@ bool CStack::allSame()
 	return false;
 }
 
+//copyStack method now used deep copy to avoid destructor issues
 void CStack::copyStack(CStack* newStack)
 {
-	newStack->mData = CStack::mData;
-	newStack->mTop = CStack::mData;
+	newStack->mData = new string * [size];;
+	newStack->mTop = mData;
+
 	for (string** i = mData; i < mTop; i++)
 	{
 		newStack->Push(**i);
 	}
-	
+
 }
